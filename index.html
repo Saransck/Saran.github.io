@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saran — Memory & Mind Game</title>
+    <title>SARAN ROYALE — 21 Blackjack</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -11,285 +11,414 @@
             theme: {
                 extend: {
                     colors: {
-                        canvas: '#F9F8F6',
-                        obsidian: '#141413',
-                        champagne: '#A38B6D',
-                        stone: '#787672',
-                        line: '#E5E3DF'
+                        casinoBlack: '#0A0A0A',
+                        casinoCharcoal: '#141414',
+                        gold: '#D4AF37',
+                        goldLight: '#F3E5AB',
+                        goldDark: '#AA7C11',
+                        surface: '#1A1A1A',
+                        lineGold: 'rgba(212, 175, 55, 0.2)'
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
                     }
                 }
             }
         }
     </script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
-            background-color: #F9F8F6;
-            color: #141413;
+            background-color: #0A0A0A;
+            color: #F5F5F5;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            letter-spacing: -0.01em;
+            overflow-x: hidden;
         }
         .editorial-title {
             font-family: 'Cormorant Garamond', serif;
         }
-        /* 3D Card Flip Animation */
-        .perspective {
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+        }
+        .card-container {
             perspective: 1000px;
         }
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
+        .playing-card {
+            background: linear-gradient(145deg, #1f1f1f, #141414);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            width: 76px;
+            height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
         }
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
+        .playing-card.red {
+            color: #C94A4A;
         }
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 0.375rem;
+        .playing-card.black {
+            color: #E5E5E5;
         }
-        .card-back {
-            transform: rotateY(180deg);
+        .chip {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px dashed rgba(212, 175, 55, 0.6);
+            background: #181818;
+            color: #D4AF37;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .chip:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-obsidian selection:text-canvas">
+<body class="min-h-screen flex flex-col justify-between selection:bg-gold selection:text-casinoBlack">
 
-    <!-- Header -->
-    <header class="py-8 px-6 border-b border-line">
-        <div class="max-w-4xl mx-auto flex items-center justify-between">
-            <a href="#" class="editorial-title text-2xl tracking-widest font-light uppercase">Saran.</a>
-            <span class="text-xs tracking-widest uppercase text-stone">Mind & Memory</span>
+    <!-- Top Bar -->
+    <header class="py-5 px-6 border-b border-lineGold bg-casinoBlack/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="editorial-title text-2xl tracking-[0.2em] text-gold uppercase">Saran Royale</span>
+                <span class="text-[10px] tracking-widest text-gold/60 uppercase border border-gold/30 px-2 py-0.5 rounded-full">Private Salon</span>
+            </div>
+            <div class="flex items-center gap-6 font-mono text-xs">
+                <div class="text-stone-400">CREDIT: <span id="bankroll" class="text-gold font-semibold text-sm">1000</span></div>
+                <div class="text-stone-400">BET: <span id="current-bet" class="text-gold font-semibold text-sm">0</span></div>
+            </div>
         </div>
     </header>
 
-    <!-- Main Game Section -->
-    <main class="max-w-xl mx-auto px-6 py-12 w-full flex-grow flex flex-col justify-center items-center">
+    <!-- Main Game Arena -->
+    <main class="max-w-4xl mx-auto w-full px-4 py-8 flex-grow flex flex-col justify-between gap-8">
         
-        <!-- Game Info Dashboard -->
-        <div class="w-full grid grid-cols-3 gap-4 mb-8 text-center border-b border-line pb-6">
-            <div>
-                <span class="block text-[10px] uppercase tracking-[0.2em] text-stone">Time</span>
-                <span id="timer" class="editorial-title text-2xl font-light">00:00</span>
-            </div>
-            <div>
-                <span class="block text-[10px] uppercase tracking-[0.2em] text-stone">Moves</span>
-                <span id="moves" class="editorial-title text-2xl font-light">0</span>
-            </div>
-            <div>
-                <span class="block text-[10px] uppercase tracking-[0.2em] text-stone">Best Moves</span>
-                <span id="best-score" class="editorial-title text-2xl font-light text-champagne">-</span>
-            </div>
+        <!-- Status / Message Banner -->
+        <div class="text-center h-8 flex items-center justify-center">
+            <p id="game-message" class="editorial-title text-xl sm:text-2xl text-gold tracking-wide italic">Place your wager to begin</p>
         </div>
 
-        <!-- Card Grid (4x4) -->
-        <div id="game-board" class="grid grid-cols-4 gap-3 sm:gap-4 w-full aspect-square max-w-md">
-            <!-- Cards will be dynamically generated by JS -->
-        </div>
+        <!-- Dealer Section -->
+        <section class="flex flex-col items-center gap-3">
+            <div class="flex items-center justify-between w-full max-w-md text-xs tracking-widest uppercase text-gold/70">
+                <span>Dealer</span>
+                <span id="dealer-score" class="font-mono text-gold">-</span>
+            </div>
+            <div id="dealer-hand" class="flex items-center justify-center gap-3 min-h-[120px] p-4 rounded-xl gold-border bg-surface/50 w-full max-w-md">
+                <!-- Dealer cards injected via JS -->
+            </div>
+        </section>
 
-        <!-- Controls -->
-        <div class="mt-10 flex gap-4">
-            <button onclick="resetGame()" class="text-xs tracking-widest uppercase border border-obsidian px-8 py-3 rounded-full hover:bg-obsidian hover:text-canvas transition-all duration-300">
-                Restart Game
-            </button>
-        </div>
+        <!-- Divider line -->
+        <div class="w-full max-w-md mx-auto h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent"></div>
+
+        <!-- Player Section -->
+        <section class="flex flex-col items-center gap-3">
+            <div id="player-hand" class="flex items-center justify-center gap-3 min-h-[120px] p-4 rounded-xl gold-border bg-surface/50 w-full max-w-md">
+                <!-- Player cards injected via JS -->
+            </div>
+            <div class="flex items-center justify-between w-full max-w-md text-xs tracking-widest uppercase text-gold/70">
+                <span>Player</span>
+                <span id="player-score" class="font-mono text-gold">-</span>
+            </div>
+        </section>
+
+        <!-- Betting & Control Console -->
+        <section class="flex flex-col items-center gap-6 pt-4">
+            <!-- Chip Selector (Betting phase) -->
+            <div id="betting-area" class="flex flex-col items-center gap-4">
+                <p class="text-[11px] uppercase tracking-[0.2em] text-stone-400">Select Wager Chip</p>
+                <div class="flex items-center gap-4">
+                    <button class="chip" onclick="addBet(10)">10</button>
+                    <button class="chip" onclick="addBet(50)">50</button>
+                    <button class="chip" onclick="addBet(100)">100</button>
+                    <button class="chip" onclick="addBet(500)">500</button>
+                </div>
+                <div class="flex gap-3 mt-2">
+                    <button id="btn-clear-bet" onclick="clearBet()" class="text-xs tracking-widest uppercase border border-white/20 text-stone-300 px-5 py-2 rounded-full hover:border-gold hover:text-gold transition-colors">Clear</button>
+                    <button id="btn-deal" onclick="startHand()" class="text-xs tracking-widest uppercase border border-gold bg-gold/10 text-gold px-8 py-2 rounded-full hover:bg-gold hover:text-casinoBlack font-semibold transition-all gold-glow">Deal Cards</button>
+                </div>
+            </div>
+
+            <!-- In-Game Controls (Hit/Stand/Double) -->
+            <div id="action-area" class="hidden flex items-center gap-4">
+                <button onclick="playerHit()" class="text-xs tracking-widest uppercase border border-gold/40 text-gold px-6 py-2.5 rounded-full hover:bg-gold/20 transition-all">Hit</button>
+                <button onclick="playerStand()" class="text-xs tracking-widest uppercase border border-gold bg-gold text-casinoBlack font-semibold px-6 py-2.5 rounded-full hover:bg-goldLight transition-all">Stand</button>
+                <button id="btn-double" onclick="playerDouble()" class="text-xs tracking-widest uppercase border border-gold/40 text-gold px-6 py-2.5 rounded-full hover:bg-gold/20 transition-all">Double</button>
+            </div>
+
+            <!-- Play Again (Post round) -->
+            <div id="round-end-area" class="hidden flex items-center gap-4">
+                <button onclick="resetForNextHand()" class="text-xs tracking-widest uppercase border border-gold bg-gold text-casinoBlack font-semibold px-8 py-3 rounded-full hover:bg-goldLight transition-all gold-glow">Next Hand</button>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Victory Modal -->
-    <div id="victory-modal" class="fixed inset-0 bg-obsidian/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
-        <div class="bg-canvas border border-line p-8 sm:p-12 rounded-sm max-w-sm w-full text-center shadow-2xl mx-4 transform scale-95 transition-transform duration-500" id="modal-content">
-            <p class="text-xs uppercase tracking-[0.2em] text-champagne mb-2">Congratulations</p>
-            <h2 class="editorial-title text-4xl font-light mb-4">Completed</h2>
-            <p class="text-stone text-sm font-light mb-6">
-                ใช้เวลาไป <span id="final-time" class="text-obsidian font-medium">00:00</span> <br>
-                จำนวนการเดิน <span id="final-moves" class="text-obsidian font-medium">0</span> ครั้ง
-            </p>
-            <button onclick="closeModalAndReset()" class="w-full text-xs tracking-widest uppercase border border-obsidian bg-obsidian text-canvas py-3.5 rounded-full hover:bg-champagne hover:border-champagne transition-all duration-300">
-                Play Again
-            </button>
-        </div>
-    </div>
-
     <!-- Footer -->
-    <footer class="py-6 border-t border-line text-center text-xs text-stone">
-        © 2026 Saran. Minimalist Game Architecture.
+    <footer class="py-4 border-t border-lineGold text-center text-[10px] tracking-widest uppercase text-stone-500">
+        © 2026 Saran Royale. High-Limit Blackjack.
     </footer>
 
-    <!-- Game Logic Script -->
+    <!-- Game Logic -->
     <script>
-        // List of Lucide Icons (8 pairs)
-        const iconList = [
-            'gem', 'crown', 'sparkles', 'feather', 
-            'compass', 'moon', 'sun', 'flame'
-        ];
+        const suits = ['♠', '♥', '♦', '♣'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-        let cards = [];
-        let flippedCards = [];
-        let matchedPairs = 0;
-        let moves = 0;
-        let timerSeconds = 0;
-        let timerInterval = null;
-        let isGameStarted = false;
-        let isBoardLocked = false;
+        let deck = [];
+        let playerHand = [];
+        let dealerHand = [];
+        let bankroll = 1000;
+        let currentBet = 0;
+        let roundOver = false;
+        let dealerHiddenCard = null;
 
-        const board = document.getElementById('game-board');
-        const movesEl = document.getElementById('moves');
-        const timerEl = document.getElementById('timer');
-        const bestScoreEl = document.getElementById('best-score');
+        const bankrollEl = document.getElementById('bankroll');
+        const currentBetEl = document.getElementById('current-bet');
+        const gameMessageEl = document.getElementById('game-message');
+        const dealerHandEl = document.getElementById('dealer-hand');
+        const playerHandEl = document.getElementById('player-hand');
+        const dealerScoreEl = document.getElementById('dealer-score');
+        const playerScoreEl = document.getElementById('player-score');
 
-        // Load Best Score from localStorage
-        function loadBestScore() {
-            const best = localStorage.getItem('saran_best_moves');
-            bestScoreEl.textContent = best ? best : '-';
+        const bettingArea = document.getElementById('betting-area');
+        const actionArea = document.getElementById('action-area');
+        const roundEndArea = document.getElementById('round-end-area');
+        const btnDouble = document.getElementById('btn-double');
+
+        function createDeck() {
+            deck = [];
+            for (let suit of suits) {
+                for (let val of values) {
+                    deck.push({ suit, val, color: (suit === '♥' || suit === '♦') ? 'red' : 'black' });
+                }
+            }
+            deck.sort(() => Math.random() - 0.5);
         }
 
-        // Initialize Game
-        function initGame() {
-            board.innerHTML = '';
-            cards = [...iconList, ...iconList]; // Duplicate to make pairs
-            cards.sort(() => Math.random() - 0.5); // Shuffle
+        function addBet(amount) {
+            if (bankroll >= amount) {
+                bankroll -= amount;
+                currentBet += amount;
+                updateHUD();
+            }
+        }
 
-            flippedCards = [];
-            matchedPairs = 0;
-            moves = 0;
-            timerSeconds = 0;
-            isGameStarted = false;
-            isBoardLocked = false;
-            
-            movesEl.textContent = '0';
-            timerEl.textContent = '00:00';
-            clearInterval(timerInterval);
+        function clearBet() {
+            bankroll += currentBet;
+            currentBet = 0;
+            updateHUD();
+        }
 
-            // Render Cards
-            cards.forEach((iconName, index) => {
-                const card = document.createElement('div');
-                card.className = 'card perspective cursor-pointer w-full h-full';
-                card.dataset.icon = iconName;
-                card.dataset.index = index;
+        function updateHUD() {
+            bankrollEl.textContent = bankroll;
+            currentBetEl.textContent = currentBet;
+        }
 
-                card.innerHTML = `
-                    <div class="card-inner border border-line rounded-sm">
-                        <!-- Front Face (Hidden/Cover) -->
-                        <div class="card-front bg-[#EBE9E4] flex items-center justify-center hover:bg-[#E2DFD8] transition-colors">
-                            <span class="editorial-title text-stone/40 text-lg">S</span>
-                        </div>
-                        <!-- Back Face (Revealed Icon) -->
-                        <div class="card-back bg-obsidian text-canvas flex items-center justify-center">
-                            <i data-lucide="${iconName}" class="w-6 h-6 sm:w-8 sm:h-8 text-champagne"></i>
-                        </div>
+        function renderCardHTML(card, hidden = false) {
+            if (hidden) {
+                return `
+                    <div class="playing-card bg-neutral-900 border-gold/20 flex items-center justify-center">
+                        <span class="editorial-title text-gold/30 text-xl">S</span>
                     </div>
                 `;
-
-                card.addEventListener('click', () => flipCard(card));
-                board.appendChild(card);
-            });
-
-            lucide.createIcons();
-            loadBestScore();
-        }
-
-        // Start Timer
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timerSeconds++;
-                const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
-                const secs = String(timerSeconds % 60).padStart(2, '0');
-                timerEl.textContent = `${mins}:${secs}`;
-            }, 1000);
-        }
-
-        // Flip Card Action
-        function flipCard(card) {
-            if (isBoardLocked || card.classList.contains('flipped') || flippedCards.includes(card)) return;
-
-            if (!isGameStarted) {
-                isGameStarted = true;
-                startTimer();
             }
-
-            card.classList.add('flipped');
-            flippedCards.push(card);
-
-            if (flippedCards.length === 2) {
-                moves++;
-                movesEl.textContent = moves;
-                checkMatch();
-            }
+            return `
+                <div class="playing-card ${card.color} fade-in">
+                    <div class="text-xs font-mono font-bold leading-none">${card.val}</div>
+                    <div class="text-center text-lg">${card.suit}</div>
+                    <div class="text-xs font-mono font-bold leading-none self-end rotate-180">${card.val}</div>
+                </div>
+            `;
         }
 
-        // Check if 2 flipped cards match
-        function checkMatch() {
-            isBoardLocked = true;
-            const [card1, card2] = flippedCards;
-
-            if (card1.dataset.icon === card2.dataset.icon) {
-                // Match Found
-                matchedPairs++;
-                flippedCards = [];
-                isBoardLocked = false;
-
-                if (matchedPairs === iconList.length) {
-                    gameWin();
+        function calculateHandValue(hand) {
+            let total = 0;
+            let aces = 0;
+            for (let card of hand) {
+                if (card.val === 'A') {
+                    aces++;
+                    total += 11;
+                } else if (['K', 'Q', 'J'].includes(card.val)) {
+                    total += 10;
+                } else {
+                    total += parseInt(card.val);
                 }
+            }
+            while (total > 21 && aces > 0) {
+                total -= 10;
+                aces--;
+            }
+            return total;
+        }
+
+        function startHand() {
+            if (currentBet === 0) {
+                gameMessageEl.textContent = 'Please place a wager first';
+                return;
+            }
+            createDeck();
+            playerHand = [deck.pop(), deck.pop()];
+            dealerHand = [deck.pop(), deck.pop()];
+            dealerHiddenCard = dealerHand[1];
+
+            roundOver = false;
+            bettingArea.classList.add('hidden');
+            roundEndArea.classList.add('hidden');
+            actionArea.classList.remove('hidden');
+
+            // Double Down available only if enough bankroll
+            btnDouble.style.display = bankroll >= currentBet ? 'inline-block' : 'none';
+
+            renderHands(true);
+            gameMessageEl.textContent = 'Hit, Stand, or Double';
+
+            // Check immediate natural blackjack
+            const pVal = calculateHandValue(playerHand);
+            if (pVal === 21) {
+                endHand('Natural Blackjack!', 2.5);
+            }
+        }
+
+        function renderHands(hideDealerSecond = true) {
+            playerHandEl.innerHTML = playerHand.map(c => renderCardHTML(c, false)).join('');
+            playerScoreEl.textContent = calculateHandValue(playerHand);
+
+            if (hideDealerSecond && !roundOver) {
+                dealerHandEl.innerHTML = renderCardHTML(dealerHand[0], false) + renderCardHTML(dealerHand[1], true);
+                dealerScoreEl.textContent = calculateSingleCardValue(dealerHand[0]);
             } else {
-                // Not Match - Flip back
-                setTimeout(() => {
-                    card1.classList.remove('flipped');
-                    card2.classList.remove('flipped');
-                    flippedCards = [];
-                    isBoardLocked = false;
-                }, 800);
+                dealerHandEl.innerHTML = dealerHand.map(c => renderCardHTML(c, false)).join('');
+                dealerScoreEl.textContent = calculateHandValue(dealerHand);
             }
         }
 
-        // Game Win Event
-        function gameWin() {
-            clearInterval(timerInterval);
-            
-            // Save Best Score
-            const currentBest = localStorage.getItem('saran_best_moves');
-            if (!currentBest || moves < parseInt(currentBest)) {
-                localStorage.setItem('saran_best_moves', moves);
-                bestScoreEl.textContent = moves;
+        function calculateSingleCardValue(card) {
+            if (card.val === 'A') return 11;
+            if (['K', 'Q', 'J'].includes(card.val)) return 10;
+            return parseInt(card.val);
+        }
+
+        function playerHit() {
+            if (roundOver) return;
+            playerHand.push(deck.pop());
+            renderHands(true);
+            const val = calculateHandValue(playerHand);
+            if (val > 21) {
+                endHand('Bust! Dealer Wins.', 0);
+            } else if (val === 21) {
+                playerStand();
             }
-
-            // Show Modal
-            document.getElementById('final-time').textContent = timerEl.textContent;
-            document.getElementById('final-moves').textContent = moves;
-
-            const modal = document.getElementById('victory-modal');
-            const modalContent = document.getElementById('modal-content');
-            
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modalContent.classList.remove('scale-95');
-            modalContent.classList.add('scale-100');
         }
 
-        function closeModalAndReset() {
-            const modal = document.getElementById('victory-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            initGame();
+        function playerDouble() {
+            if (roundOver || bankroll < currentBet) return;
+            bankroll -= currentBet;
+            currentBet *= 2;
+            updateHUD();
+            playerHand.push(deck.pop());
+            const val = calculateHandValue(playerHand);
+            if (val > 21) {
+                renderHands(false);
+                endHand('Bust on Double! Dealer Wins.', 0);
+            } else {
+                playerStand();
+            }
         }
 
-        function resetGame() {
-            initGame();
+        function playerStand() {
+            if (roundOver) return;
+            actionArea.classList.add('hidden');
+            dealerTurn();
         }
 
-        // Start on load
-        window.onload = initGame;
+        function dealerTurn() {
+            roundOver = true;
+            renderHands(false);
+
+            let dVal = calculateHandValue(dealerHand);
+            const pVal = calculateHandValue(playerHand);
+
+            let dealerInterval = setInterval(() => {
+                if (dVal < 17) {
+                    dealerHand.push(deck.pop());
+                    renderHands(false);
+                    dVal = calculateHandValue(dealerHand);
+                } else {
+                    clearInterval(dealerInterval);
+                    evaluateWinner(pVal, dVal);
+                }
+            }, 600);
+        }
+
+        function evaluateWinner(pVal, dVal) {
+            if (dVal > 21) {
+                endHand('Dealer Bust! You Win.', 2);
+            } else if (pVal > dVal) {
+                endHand('You Win the Hand.', 2);
+            } else if (pVal < dVal) {
+                endHand('Dealer Wins.', 0);
+            } else {
+                endHand('Push (Tie). Wager Returned.', 1);
+            }
+        }
+
+        function endHand(message, multiplier) {
+            roundOver = true;
+            actionArea.classList.add('hidden');
+            roundEndArea.classList.remove('hidden');
+            gameMessageEl.textContent = message;
+
+            const payout = Math.floor(currentBet * multiplier);
+            bankroll += payout;
+            currentBet = 0;
+            updateHUD();
+        }
+
+        function resetForNextHand() {
+            if (bankroll <= 0) {
+                bankroll = 1000;
+                gameMessageEl.textContent = 'Salon Refilled 1,000 Credits';
+                updateHUD();
+            }
+            roundEndArea.classList.add('hidden');
+            bettingArea.classList.remove('hidden');
+            playerHand = [];
+            dealerHand = [];
+            playerHandEl.innerHTML = '';
+            dealerHandEl.innerHTML = '';
+            playerScoreEl.textContent = '-';
+            dealerScoreEl.textContent = '-';
+            gameMessageEl.textContent = 'Place your wager to begin';
+            updateHUD();
+        }
+
+        updateHUD();
     </script>
 </body>
 </html>
