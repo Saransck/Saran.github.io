@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saran — Editorial Resume</title>
+    <title>Saran — Memory & Mind Game</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -26,7 +26,7 @@
         }
     </script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -35,191 +35,261 @@
             color: #141413;
             font-family: 'Plus Jakarta Sans', sans-serif;
             letter-spacing: -0.01em;
-            line-height: 1.7;
         }
         .editorial-title {
             font-family: 'Cormorant Garamond', serif;
         }
-        .grain {
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        /* 3D Card Flip Animation */
+        .perspective {
+            perspective: 1000px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.375rem;
+        }
+        .card-back {
+            transform: rotateY(180deg);
         }
     </style>
 </head>
-<body class="selection:bg-obsidian selection:text-canvas relative">
+<body class="min-h-screen flex flex-col justify-between selection:bg-obsidian selection:text-canvas">
 
-    <!-- Subtle Grain Overlay -->
-    <div class="fixed inset-0 pointer-events-none grain z-50"></div>
-
-    <!-- Editorial Header / Portfolio Nav -->
-    <header class="fixed top-0 left-0 right-0 z-40 bg-canvas/85 backdrop-blur-md border-b border-line">
-        <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="editorial-title text-xl tracking-widest font-light uppercase">Saran.</a>
-            <div class="flex items-center gap-6 text-xs tracking-widest uppercase text-stone">
-                <a href="#about" class="hover:text-obsidian transition-colors">About</a>
-                <a href="#experience" class="hover:text-obsidian transition-colors">Experience</a>
-                <a href="#skills" class="hover:text-obsidian transition-colors">Craft</a>
-            </div>
+    <!-- Header -->
+    <header class="py-8 px-6 border-b border-line">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <a href="#" class="editorial-title text-2xl tracking-widest font-light uppercase">Saran.</a>
+            <span class="text-xs tracking-widest uppercase text-stone">Mind & Memory</span>
         </div>
     </header>
 
-    <!-- Main Container (Editorial Document) -->
-    <main class="max-w-4xl mx-auto px-6 pt-40 pb-32">
+    <!-- Main Game Section -->
+    <main class="max-w-xl mx-auto px-6 py-12 w-full flex-grow flex flex-col justify-center items-center">
         
-        <!-- Profile / Hero Section -->
-        <section class="border-b border-line pb-16 mb-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+        <!-- Game Info Dashboard -->
+        <div class="w-full grid grid-cols-3 gap-4 mb-8 text-center border-b border-line pb-6">
             <div>
-                <p class="text-xs uppercase tracking-[0.2em] text-champagne mb-4">Curriculum Vitae</p>
-                <h1 class="editorial-title text-5xl sm:text-7xl font-light tracking-tight mb-4">
-                    ศรัณย์ (Saran)
-                </h1>
-                <p class="text-stone text-base font-light tracking-wide">
-                    Full-Stack Web Developer <span class="mx-2 text-line">/</span> Bangkok, Thailand
-                </p>
-            </div>
-            <!-- Minimalist Profile Avatar with VOA Image -->
-            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-[#EBE9E4] border border-line shrink-0">
-                <img src="https://gdb.voanews.com/EEA0B145-95D4-4532-9C69-D0FCD1833D53_w408_r0_s.jpg" alt="Saran Profile" class="w-full h-full object-cover">
-            </div>
-        </section>
-
-        <!-- Contact Strip -->
-        <section class="grid grid-cols-2 sm:grid-cols-4 gap-6 py-8 border-b border-line mb-20 text-xs tracking-widest uppercase">
-            <div>
-                <span class="block text-stone mb-1">Location</span>
-                <span class="text-obsidian">กรุงเทพฯ</span>
+                <span class="block text-[10px] uppercase tracking-[0.2em] text-stone">Time</span>
+                <span id="timer" class="editorial-title text-2xl font-light">00:00</span>
             </div>
             <div>
-                <span class="block text-stone mb-1">Direct Call</span>
-                <span class="text-obsidian">089-123-4567</span>
+                <span class="block text-[10px] uppercase tracking-[0.2em] text-stone">Moves</span>
+                <span id="moves" class="editorial-title text-2xl font-light">0</span>
             </div>
             <div>
-                <span class="block text-stone mb-1">Mail</span>
-                <a href="mailto:saran@email.com" class="text-obsidian hover:text-champagne transition-colors">saran@email.com</a>
+                <span class="block text-[10px] uppercase tracking-[0.2em] text-stone">Best Moves</span>
+                <span id="best-score" class="editorial-title text-2xl font-light text-champagne">-</span>
             </div>
-            <div>
-                <span class="block text-stone mb-1">Network</span>
-                <a href="https://linkedin.com" target="_blank" class="text-obsidian hover:text-champagne transition-colors">LinkedIn ↗</a>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-24">
-            <div class="md:col-span-4">
-                <h2 class="editorial-title text-2xl font-light text-obsidian uppercase tracking-wider">01 / Profile</h2>
-            </div>
-            <div class="md:col-span-8">
-                <p class="text-stone text-lg font-light leading-relaxed">
-                    นักพัฒนาเว็บไซต์ที่มีความกระตือรือร้นและประสบการณ์กว่า 3 ปีในการสร้างสรรค์ Web Application ที่ใช้งานง่าย มีความเชี่ยวชาญด้านการเขียนโค้ดที่สะอาด (Clean Code) และการปรับแต่งประสิทธิภาพของระบบหน้าบ้าน (Frontend Optimization) มองความเรียบง่ายและเสถียรภาพเป็นหัวใจสำคัญ
-                </p>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section id="experience" class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-24">
-            <div class="md:col-span-4">
-                <h2 class="editorial-title text-2xl font-light text-obsidian uppercase tracking-wider">02 / Experience</h2>
-            </div>
-            <div class="md:col-span-8 space-y-16">
-                
-                <!-- Exp 1 -->
-                <div class="group">
-                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-3">
-                        <h3 class="editorial-title text-3xl font-light text-obsidian">Senior Web Developer</h3>
-                        <span class="text-xs tracking-widest text-stone uppercase">2024 — Present</span>
-                    </div>
-                    <p class="text-xs uppercase tracking-widest text-champagne mb-4">Tech Innovation Co.</p>
-                    <ul class="space-y-2 text-stone font-light text-sm">
-                        <li class="flex items-start">
-                            <span class="mr-3 text-champagne">—</span>
-                            <span>นำทีมพัฒนาโปรเจกต์ E-commerce ด้วย React และ Node.js เพิ่มยอดผู้ใช้งานขึ้น 40%</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-3 text-champagne">—</span>
-                            <span>ออกแบบโครงสร้างฐานข้อมูลใหม่ ช่วยลดเวลาโหลดของหน้าเว็บลง 1.5 วินาที</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="border-t border-line/60"></div>
-
-                <!-- Exp 2 -->
-                <div class="group">
-                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-3">
-                        <h3 class="editorial-title text-3xl font-light text-obsidian">Junior Developer</h3>
-                        <span class="text-xs tracking-widest text-stone uppercase">2022 — 2024</span>
-                    </div>
-                    <p class="text-xs uppercase tracking-widest text-champagne mb-4">Digital Solutions Agency</p>
-                    <ul class="space-y-2 text-stone font-light text-sm">
-                        <li class="flex items-start">
-                            <span class="mr-3 text-champagne">—</span>
-                            <span>พัฒนาและดูแลรักษาเว็บไซต์ของลูกค้ามากกว่า 15 เว็บไซต์ โดยใช้ WordPress และ HTML/CSS</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-3 text-champagne">—</span>
-                            <span>ประสานงานกับทีมผู้พิจารณาออกแบบ (UI/UX) เพื่อเปลี่ยนดีไซน์ให้กลายเป็นโค้ดที่ใช้งานได้จริง</span>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Craft / Skills Section -->
-        <section id="skills" class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-24">
-            <div class="md:col-span-4">
-                <h2 class="editorial-title text-2xl font-light text-obsidian uppercase tracking-wider">03 / Craft & Stack</h2>
-            </div>
-            <div class="md:col-span-8">
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-6 text-sm font-light text-stone">
-                    <div class="border-b border-line pb-2 flex justify-between"><span>HTML5 / CSS3</span><span class="text-xs text-champagne">Core</span></div>
-                    <div class="border-b border-line pb-2 flex justify-between"><span>JavaScript (ES6+)</span><span class="text-xs text-champagne">Core</span></div>
-                    <div class="border-b border-line pb-2 flex justify-between"><span>React.js</span><span class="text-xs text-champagne">Frontend</span></div>
-                    <div class="border-b border-line pb-2 flex justify-between"><span>Node.js</span><span class="text-xs text-champagne">Backend</span></div>
-                    <div class="border-b border-line pb-2 flex justify-between"><span>SQL / MongoDB</span><span class="text-xs text-champagne">Data</span></div>
-                    <div class="border-b border-line pb-2 flex justify-between"><span>Git & GitHub</span><span class="text-xs text-champagne">Ops</span></div>
-                    <div class="border-b border-line pb-2 flex justify-between"><span>Responsive Design</span><span class="text-xs text-champagne">UI</span></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Education Section -->
-        <section class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-24">
-            <div class="md:col-span-4">
-                <h2 class="editorial-title text-2xl font-light text-obsidian uppercase tracking-wider">04 / Education</h2>
-            </div>
-            <div class="md:col-span-8">
-                <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
-                    <h3 class="editorial-title text-2xl font-light text-obsidian">วิทยาศาสตรบัณฑิต (วิทยาการคอมพิวเตอร์)</h3>
-                    <span class="text-xs tracking-widest text-stone uppercase">2018 — 2022</span>
-                </div>
-                <p class="text-stone font-light text-sm">มหาวิทยาลัยนวัตกรรมเทคโนโลยี</p>
-            </div>
-        </section>
-
-        <!-- CTA / Action -->
-        <div class="pt-12 border-t border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div>
-                <p class="text-xs uppercase tracking-[0.2em] text-stone mb-1">Inquiry</p>
-                <p class="editorial-title text-3xl font-light">Available for select collaborations.</p>
-            </div>
-            <a href="#" class="text-xs tracking-widest uppercase border border-obsidian px-8 py-4 rounded-full hover:bg-obsidian hover:text-canvas transition-all duration-300">
-                Download PDF Dossier ↗
-            </a>
         </div>
 
+        <!-- Card Grid (4x4) -->
+        <div id="game-board" class="grid grid-cols-4 gap-3 sm:gap-4 w-full aspect-square max-w-md">
+            <!-- Cards will be dynamically generated by JS -->
+        </div>
+
+        <!-- Controls -->
+        <div class="mt-10 flex gap-4">
+            <button onclick="resetGame()" class="text-xs tracking-widest uppercase border border-obsidian px-8 py-3 rounded-full hover:bg-obsidian hover:text-canvas transition-all duration-300">
+                Restart Game
+            </button>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-line py-12 px-6">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs text-stone">
-            <span>© 2026 Saran. All rights reserved.</span>
-            <span>Editorial Template</span>
+    <!-- Victory Modal -->
+    <div id="victory-modal" class="fixed inset-0 bg-obsidian/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="bg-canvas border border-line p-8 sm:p-12 rounded-sm max-w-sm w-full text-center shadow-2xl mx-4 transform scale-95 transition-transform duration-500" id="modal-content">
+            <p class="text-xs uppercase tracking-[0.2em] text-champagne mb-2">Congratulations</p>
+            <h2 class="editorial-title text-4xl font-light mb-4">Completed</h2>
+            <p class="text-stone text-sm font-light mb-6">
+                ใช้เวลาไป <span id="final-time" class="text-obsidian font-medium">00:00</span> <br>
+                จำนวนการเดิน <span id="final-moves" class="text-obsidian font-medium">0</span> ครั้ง
+            </p>
+            <button onclick="closeModalAndReset()" class="w-full text-xs tracking-widest uppercase border border-obsidian bg-obsidian text-canvas py-3.5 rounded-full hover:bg-champagne hover:border-champagne transition-all duration-300">
+                Play Again
+            </button>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-6 border-t border-line text-center text-xs text-stone">
+        © 2026 Saran. Minimalist Game Architecture.
     </footer>
 
-    <!-- Init Lucide Icons -->
+    <!-- Game Logic Script -->
     <script>
-        lucide.createIcons();
+        // List of Lucide Icons (8 pairs)
+        const iconList = [
+            'gem', 'crown', 'sparkles', 'feather', 
+            'compass', 'moon', 'sun', 'flame'
+        ];
+
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let isGameStarted = false;
+        let isBoardLocked = false;
+
+        const board = document.getElementById('game-board');
+        const movesEl = document.getElementById('moves');
+        const timerEl = document.getElementById('timer');
+        const bestScoreEl = document.getElementById('best-score');
+
+        // Load Best Score from localStorage
+        function loadBestScore() {
+            const best = localStorage.getItem('saran_best_moves');
+            bestScoreEl.textContent = best ? best : '-';
+        }
+
+        // Initialize Game
+        function initGame() {
+            board.innerHTML = '';
+            cards = [...iconList, ...iconList]; // Duplicate to make pairs
+            cards.sort(() => Math.random() - 0.5); // Shuffle
+
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            timerSeconds = 0;
+            isGameStarted = false;
+            isBoardLocked = false;
+            
+            movesEl.textContent = '0';
+            timerEl.textContent = '00:00';
+            clearInterval(timerInterval);
+
+            // Render Cards
+            cards.forEach((iconName, index) => {
+                const card = document.createElement('div');
+                card.className = 'card perspective cursor-pointer w-full h-full';
+                card.dataset.icon = iconName;
+                card.dataset.index = index;
+
+                card.innerHTML = `
+                    <div class="card-inner border border-line rounded-sm">
+                        <!-- Front Face (Hidden/Cover) -->
+                        <div class="card-front bg-[#EBE9E4] flex items-center justify-center hover:bg-[#E2DFD8] transition-colors">
+                            <span class="editorial-title text-stone/40 text-lg">S</span>
+                        </div>
+                        <!-- Back Face (Revealed Icon) -->
+                        <div class="card-back bg-obsidian text-canvas flex items-center justify-center">
+                            <i data-lucide="${iconName}" class="w-6 h-6 sm:w-8 sm:h-8 text-champagne"></i>
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => flipCard(card));
+                board.appendChild(card);
+            });
+
+            lucide.createIcons();
+            loadBestScore();
+        }
+
+        // Start Timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                const secs = String(timerSeconds % 60).padStart(2, '0');
+                timerEl.textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // Flip Card Action
+        function flipCard(card) {
+            if (isBoardLocked || card.classList.contains('flipped') || flippedCards.includes(card)) return;
+
+            if (!isGameStarted) {
+                isGameStarted = true;
+                startTimer();
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                movesEl.textContent = moves;
+                checkMatch();
+            }
+        }
+
+        // Check if 2 flipped cards match
+        function checkMatch() {
+            isBoardLocked = true;
+            const [card1, card2] = flippedCards;
+
+            if (card1.dataset.icon === card2.dataset.icon) {
+                // Match Found
+                matchedPairs++;
+                flippedCards = [];
+                isBoardLocked = false;
+
+                if (matchedPairs === iconList.length) {
+                    gameWin();
+                }
+            } else {
+                // Not Match - Flip back
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                    isBoardLocked = false;
+                }, 800);
+            }
+        }
+
+        // Game Win Event
+        function gameWin() {
+            clearInterval(timerInterval);
+            
+            // Save Best Score
+            const currentBest = localStorage.getItem('saran_best_moves');
+            if (!currentBest || moves < parseInt(currentBest)) {
+                localStorage.setItem('saran_best_moves', moves);
+                bestScoreEl.textContent = moves;
+            }
+
+            // Show Modal
+            document.getElementById('final-time').textContent = timerEl.textContent;
+            document.getElementById('final-moves').textContent = moves;
+
+            const modal = document.getElementById('victory-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }
+
+        function closeModalAndReset() {
+            const modal = document.getElementById('victory-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            initGame();
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Start on load
+        window.onload = initGame;
     </script>
 </body>
 </html>
