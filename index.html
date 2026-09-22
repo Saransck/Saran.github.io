@@ -1,86 +1,184 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Atelier - Luxury & Minimal Experience</title>
-    <!-- นำเข้า Tailwind CSS และ Google Fonts -->
-    <script src="https://tailwindcss.com"></script>
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ตั้งค่าฟอนต์หรูหราสำหรับพาดหัว และฟอนต์เรียบง่ายสำหรับเนื้อหา */
-        .font-luxury { font-family: 'Cormorant Garamond', serif; }
-        .font-body { font-family: 'Inter', sans-serif; }
-        
-        /* Animation ค่อยๆ เฟดขึ้นตอนเปิดเว็บ */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+    <title>AERIS — Atelier of Minimalist Design</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: '#F9F8F6',
+                        obsidian: '#141413',
+                        champagne: '#A38B6D',
+                        stone: '#787672',
+                        line: '#E5E3DF'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
         }
-        .animate-fade-in { animation: fadeInUp 1.2s ease-out forwards; }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #F9F8F6;
+            color: #141413;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .editorial-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        }
     </style>
 </head>
-<body class="bg-[#fcfbf9] text-[#1c1c1c] font-body antialiased selection:bg-[#c5a880] selection:text-white">
+<body class="selection:bg-obsidian selection:text-canvas relative">
+    
+    <!-- Subtle Grain Overlay -->
+    <div class="fixed inset-0 pointer-events-none grain z-50"></div>
 
-    <!-- 1. Navigation Bar (แถบเมนู) -->
-    <nav class="fixed w-full z-50 bg-[#fcfbf9]/80 backdrop-blur-md border-b border-[#e5e0d8] px-8 py-6 flex justify-between items-center">
-        <a href="#" class="font-luxury text-2xl tracking-widest uppercase font-semibold text-[#1c1c1c]">THE ATELIER</a>
-        <div class="hidden md:flex space-x-12 text-sm tracking-widest uppercase text-[#666] font-light">
-            <a href="#" class="hover:text-[#c5a880] transition-colors duration-300">คอลเลกชัน</a>
-            <a href="#" class="hover:text-[#c5a880] transition-colors duration-300">เรื่องราวของเรา</a>
-            <a href="#" class="hover:text-[#c5a880] transition-colors duration-300">ติดต่อ</a>
-        </div>
-        <div>
-            <a href="#" class="text-xs tracking-widest uppercase border border-[#1c1c1c] px-6 py-2.5 hover:bg-[#1c1c1c] hover:text-white transition-all duration-500">
-                นัดหมาย
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-canvas/80 backdrop-blur-md border-b border-line">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="editorial-title text-2xl tracking-widest font-light uppercase">Aeris.</a>
+            <nav class="hidden md:flex items-center space-x-10 text-xs tracking-widest uppercase text-stone">
+                <a href="#work" class="hover:text-obsidian transition-colors">Selected Work</a>
+                <a href="#philosophy" class="hover:text-obsidian transition-colors">Philosophy</a>
+                <a href="#about" class="hover:text-obsidian transition-colors">Atelier</a>
+            </nav>
+            <a href="#contact" class="text-xs tracking-widest uppercase border border-obsidian/20 px-5 py-2.5 rounded-full hover:bg-obsidian hover:text-canvas transition-all duration-300">
+                Inquire
             </a>
         </div>
-    </nav>
+    </header>
 
-    <!-- 2. Hero Section (ส่วนหัวของเว็บไซต์) -->
-    <section class="min-h-screen flex flex-col justify-center items-center pt-20 px-6 text-center bg-[radial-gradient(#e5e0d8_1px,transparent_1px)] [background-size:16px_16px]">
-        <div class="max-w-3xl animate-fade-in">
-            <span class="text-xs tracking-[0.3em] uppercase text-[#c5a880] font-medium mb-4 block">New Collection Available</span>
-            <h1 class="font-luxury text-5xl md:text-7xl font-light tracking-tight leading-tight mb-8 text-[#1c1c1c]">
-                ความเรียบง่าย <br><span class="italic font-normal text-[#c5a880]">คือนิยาม</span> ของความหรูหรา
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 md:pt-44 md:pb-32 px-6 border-b border-line">
+        <div class="max-w-7xl mx-auto">
+            <p class="text-xs uppercase tracking-[0.2em] text-champagne mb-6">Contemporary Digital Architecture</p>
+            <h1 class="editorial-title text-5xl sm:text-7xl md:text-8xl font-light leading-[1.05] tracking-tight max-w-4xl">
+                We craft silent spaces for <span class="italic font-normal">resonant</span> digital brands.
             </h1>
-            <p class="text-sm md:text-base text-[#666] font-light max-w-xl mx-auto leading-relaxed mb-12">
-                สัมผัสประสบการณ์การออกแบบที่ผสมผสานความประณีตและฟังก์ชันการทำงานอย่างลงตัว มอบความรู้สึกสง่างามแบบเหนือกาลเวลาให้กับคุณ
-            </p>
-            <div class="flex justify-center space-x-6">
-                <a href="#" class="bg-[#1c1c1c] text-white text-xs tracking-widest uppercase px-8 py-4 hover:bg-[#c5a880] transition-all duration-500 shadow-sm">
-                    สำรวจผลงาน
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. Showcase Section (ส่วนแสดงภาพสินค้าหรือผลงาน) -->
-    <section class="py-24 px-8 max-w-7xl mx-auto border-t border-[#e5e0d8]">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div class="overflow-hidden bg-[#e5e0d8] aspect-[3/4] group cursor-pointer relative">
-                <!-- ใส่ URL รูปภาพรูปทรงมินิมอล/สถาปัตยกรรมสวยๆ ตรง src -->
-                <img src="https://unsplash.com" 
-                     alt="Luxury Interior" 
-                     class="w-full h-full object-cover filter grayscale-[20%] group-hover:scale-105 transition-transform duration-1000">
-            </div>
-            <div class="space-y-6 md:padding-left-8">
-                <span class="text-xs tracking-widest uppercase text-[#c5a880]">Craftsmanship</span>
-                <h2 class="font-luxury text-4xl font-light tracking-wide text-[#1c1c1c]">ใส่ใจในทุกรายละเอียด</h2>
-                <p class="text-sm text-[#666] font-light leading-relaxed">
-                    เพราะเราเชื่อว่าความหรูหราที่แท้จริงไม่ได้เกิดจากความฉูดฉาด แต่เกิดจากความละเอียดอ่อนในการเลือกสรรวัสดุ การจัดวางองค์ประกอบ และความประณีตในทุกขั้นตอนการผลิต
+            <div class="mt-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <p class="text-stone max-w-md text-sm md:text-base leading-relaxed font-light">
+                    Redefining luxury through reduction. Eliminating noise to let your product’s inherent authority speak.
                 </p>
-                <div class="pt-4">
-                    <a href="#" class="text-xs tracking-widest uppercase border-b border-[#1c1c1c] pb-2 hover:text-[#c5a880] hover:border-[#c5a880] transition-all duration-300">
-                        อ่านเรื่องราวของเรา &rarr;
-                    </a>
+                <div class="flex items-center gap-4 text-xs tracking-widest uppercase text-obsidian">
+                    <span>Scroll to explore</span>
+                    <i data-lucide="arrow-down-right" class="w-4 h-4 text-champagne"></i>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Selected Works (Asymmetric Grid) -->
+    <section id="work" class="py-24 md:py-32 px-6 border-b border-line">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-end justify-between mb-16">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-stone mb-2">Portfolio</p>
+                    <h2 class="editorial-title text-4xl md:text-5xl font-light">Selected Works</h2>
+                </div>
+                <span class="text-xs tracking-widest text-stone hidden sm:block">2024 — 2026</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <!-- Project 1 -->
+                <div class="md:col-span-7 group cursor-pointer">
+                    <div class="aspect-[4/3] bg-[#EBE9E4] overflow-hidden rounded-sm relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Vespera" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90">
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-line pb-4">
+                        <h3 class="editorial-title text-2xl group-hover:translate-x-1 transition-transform">Vespera — Architectural Monolith</h3>
+                        <span class="text-xs text-stone tracking-wider">Spatial Design</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="md:col-span-5 md:mt-24 group cursor-pointer">
+                    <div class="aspect-[3/4] bg-[#EBE9E4] overflow-hidden rounded-sm relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80" alt="Kuro" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90">
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-line pb-4">
+                        <h3 class="editorial-title text-2xl group-hover:translate-x-1 transition-transform">Kuro — Botanical Essence</h3>
+                        <span class="text-xs text-stone tracking-wider">Object & Brand</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="md:col-span-5 group cursor-pointer">
+                    <div class="aspect-[3/4] bg-[#EBE9E4] overflow-hidden rounded-sm relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=80" alt="Aura" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90">
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-line pb-4">
+                        <h3 class="editorial-title text-2xl group-hover:translate-x-1 transition-transform">Aura — Audio Metaphysics</h3>
+                        <span class="text-xs text-stone tracking-wider">Interface</span>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="md:col-span-7 md:mt-24 group cursor-pointer">
+                    <div class="aspect-[4/3] bg-[#EBE9E4] overflow-hidden rounded-sm relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80" alt="Lumiere" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90">
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-line pb-4">
+                        <h3 class="editorial-title text-2xl group-hover:translate-x-1 transition-transform">Lumière — Pavilion Exhibition</h3>
+                        <span class="text-xs text-stone tracking-wider">Direction</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section id="philosophy" class="py-24 md:py-32 px-6 bg-obsidian text-canvas">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-xs uppercase tracking-[0.2em] text-champagne mb-8">Manifesto</p>
+            <blockquote class="editorial-title text-3xl sm:text-5xl font-light leading-relaxed mb-12">
+                “Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.”
+            </blockquote>
+            <p class="text-stone text-sm max-w-xl mx-auto font-light leading-relaxed">
+                เราเชื่อว่าแบรนด์ระดับสูงไม่จำเป็นต้องตะโกน ความเงียบ พื้นที่ว่าง (Negative Space) และลำดับชั้นของข้อมูลที่คมชัด คือภาษาแห่งความมั่นใจสูงสุด
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact / Footer -->
+    <footer id="contact" class="py-24 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+            <div>
+                <p class="text-xs uppercase tracking-[0.2em] text-stone mb-4">Start a dialogue</p>
+                <a href="mailto:atelier@aeris.studio" class="editorial-title text-4xl sm:text-6xl hover:italic transition-all">
+                    atelier@aeris.studio
+                </a>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-8 text-xs tracking-widest uppercase text-stone">
+                <a href="#" class="hover:text-obsidian transition-colors">Instagram</a>
+                <a href="#" class="hover:text-obsidian transition-colors">Are.na</a>
+                <a href="#" class="hover:text-obsidian transition-colors">LinkedIn</a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-line flex flex-col sm:flex-row justify-between items-center text-xs text-stone">
+            <span>© 2026 Aeris Atelier. All rights reserved.</span>
+            <span>Tokyo / Paris / Bangkok</span>
+        </div>
+    </footer>
+
+    <!-- Init Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
